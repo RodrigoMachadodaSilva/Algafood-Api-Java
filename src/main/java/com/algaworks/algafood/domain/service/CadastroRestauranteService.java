@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.Exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.Exception.EntidadeNaoEncontradaException;
@@ -29,10 +30,11 @@ public class CadastroRestauranteService {
 	private CadastroCozinhaService cadastroCozinhaService;
 
 	public Restaurante buscar(Long restauranteId) {
-		return restauranteRepository.findById(restauranteId).orElseThrow(() -> new EntidadeNaoEncontradaException(
-				String.format(MSG_RESTAURANTE_NÃO_CADASTRADO, restauranteId)));
+		return restauranteRepository.findById(restauranteId).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_CADASTRADO, restauranteId)));
 	}
 
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = cadastroCozinhaService.buscar(cozinhaId);
@@ -41,14 +43,35 @@ public class CadastroRestauranteService {
 
 	}
 
+	@Transactional
 	public void excluir(Long restauranteId) {
 		try {
 			restauranteRepository.deleteById(restauranteId);
+			restauranteRepository.flush();
+
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_CADASTRADO, restauranteId));
 
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_RESTAURANTE_EM_USO, restauranteId));
 		}
+	}
+
+	@Transactional
+	public void ativar(Long restauranteId) {
+		Restaurante restauranteAtual = buscar(restauranteId);
+
+		restauranteAtual.ativar();
+		;
+
+	}
+
+	@Transactional
+	public void inativar(Long restauranteId) {
+		Restaurante restauranteAtual = buscar(restauranteId);
+
+		restauranteAtual.inativar();
+		;
+
 	}
 }

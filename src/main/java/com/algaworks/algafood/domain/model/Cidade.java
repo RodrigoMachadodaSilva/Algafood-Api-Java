@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
 
@@ -31,11 +30,11 @@ public class Cidade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
-	
+
 	@NotBlank
 	@Column(nullable = false)
 	private String nome;
-	
+
 	@ConvertGroup(from = DEFAULT.class, to = Groups.EstadoId.class)
 	@Valid
 	@ManyToOne
