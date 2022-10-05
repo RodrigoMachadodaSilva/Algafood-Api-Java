@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.RestauranteModel;
 import com.algaworks.algafood.api.RestauranteModelAssembler;
 import com.algaworks.algafood.api.RestauranteModelDisasssembler;
-import com.algaworks.algafood.api.model.input.RestauranteInput;
+import com.algaworks.algafood.api.dto.input.RestauranteInput;
+import com.algaworks.algafood.api.dto.model.RestauranteModel;
 import com.algaworks.algafood.domain.Exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.Exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;

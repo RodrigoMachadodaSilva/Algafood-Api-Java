@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.model.input.CidadeInput;
-import com.algaworks.algafood.api.model.input.CidadeInputDisassembler;
-import com.algaworks.algafood.api.model.input.CidadeModel;
-import com.algaworks.algafood.api.model.input.CidadeModelAssembler;
+import com.algaworks.algafood.api.convert.CidadeInputDisassembler;
+import com.algaworks.algafood.api.convert.CidadeModelAssembler;
+import com.algaworks.algafood.api.dto.input.CidadeInput;
+import com.algaworks.algafood.api.dto.model.CidadeModel;
 import com.algaworks.algafood.domain.Exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.Exception.NegocioException;
 import com.algaworks.algafood.domain.model.Cidade;

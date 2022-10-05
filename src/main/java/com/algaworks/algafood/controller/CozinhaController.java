@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.algaworks.algafood.api.CozinhaModel;
-import com.algaworks.algafood.api.model.input.CozinhaInput;
-import com.algaworks.algafood.api.model.input.CozinhaInputDisassembler;
-import com.algaworks.algafood.api.model.input.CozinhaModelAssembler;
+import com.algaworks.algafood.api.convert.CozinhaInputDisassembler;
+import com.algaworks.algafood.api.convert.CozinhaModelAssembler;
+import com.algaworks.algafood.api.dto.input.CozinhaInput;
+import com.algaworks.algafood.api.dto.model.CozinhaModel;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;

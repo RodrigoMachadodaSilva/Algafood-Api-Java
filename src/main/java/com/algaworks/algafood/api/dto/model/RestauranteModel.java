@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api;
+package com.algaworks.algafood.api.dto.model;
 
 import java.math.BigDecimal;
 
