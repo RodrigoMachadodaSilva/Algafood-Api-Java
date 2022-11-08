@@ -1,3 +1,4 @@
+
 package com.algaworks.algafood.core.modelmapper;
 
 import org.modelmapper.ModelMapper;
@@ -9,7 +10,8 @@ public class ModelMapperConfig {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		var modelMapper = new ModelMapper();
+		return modelMapper;
 
 	}
 
