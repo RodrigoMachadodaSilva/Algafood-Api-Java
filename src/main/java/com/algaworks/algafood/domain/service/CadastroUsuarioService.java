@@ -1,5 +1,9 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,14 +19,28 @@ import com.algaworks.algafood.domain.repository.UsuarioRepository;
 
 @Service
 public class CadastroUsuarioService {
-	
+
 	private static final String MSG_USUARIO_EM_USO = "Usuario de código %d não pode ser removido, pois está em uso";
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private EntityManager manager;
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
+		
+		manager.detach(usuario);
+
+		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+		if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+			throw new NegocioException(
+					String.format("Já existe um usuário cadastrado com e email %s", usuario.getEmail()));
+
+		}
+
 		return usuarioRepository.save(usuario);
 	}
 
@@ -40,7 +58,7 @@ public class CadastroUsuarioService {
 	public Usuario buscarOuFalhar(Long usuarioId) {
 		return usuarioRepository.findById(usuarioId).orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
 	}
-	
+
 	@Transactional
 	public void excluir(Long usuarioId) {
 		try {
