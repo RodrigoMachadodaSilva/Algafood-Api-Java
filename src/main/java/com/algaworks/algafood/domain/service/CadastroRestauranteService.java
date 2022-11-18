@@ -29,7 +29,7 @@ public class CadastroRestauranteService {
 
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
-	
+
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
@@ -76,20 +76,34 @@ public class CadastroRestauranteService {
 		restauranteAtual.inativar();
 
 	}
-	
+
 	@Transactional
-	public void desassociarFormaPagamento( Long restauranteId , Long formaPagamentoId) {
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 		Restaurante restaurante = buscar(restauranteId);
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
-		
+
 		restaurante.desassociarFormaPagamento(formaPagamento);
 	}
-	
+
 	@Transactional
-	public void associarFormaPagamento( Long restauranteId , Long formaPagamentoId) {
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 		Restaurante restaurante = buscar(restauranteId);
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
-		
+
 		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void abrirRestaurante(Long restauranteId) {
+		Restaurante restauranteAtual = buscar(restauranteId);
+
+		restauranteAtual.abrir();
+
+	}
+
+	public void fecharRestaurante(Long restauranteId) {
+		Restaurante restauranteAtual = buscar(restauranteId);
+
+		restauranteAtual.fechar();
 	}
 }
