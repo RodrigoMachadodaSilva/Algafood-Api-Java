@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.Exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.Exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.Exception.RestauranteNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 
@@ -20,6 +24,9 @@ public class CadastroRestauranteService {
 	private static final String MSG_RESTAURANTE_EM_USO = "Restaurante de código %d não pode ser deletado por estar em uso no momento";
 
 	private static final String MSG_RESTAURANTE_NÃO_CADASTRADO = "Restaurante de código %d não está cadastrado";
+
+	@Autowired
+	private CadastroUsuarioService cadastroUsuario;
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -35,7 +42,7 @@ public class CadastroRestauranteService {
 
 	public Restaurante buscar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NÃO_CADASTRADO, restauranteId)));
+				() -> new RestauranteNaoEncontradoException(String.format(MSG_RESTAURANTE_NÃO_CADASTRADO, restauranteId)));
 	}
 
 	@Transactional
@@ -78,6 +85,16 @@ public class CadastroRestauranteService {
 	}
 
 	@Transactional
+	public void Ativar(List<Long> restauranteId) {
+		restauranteId.forEach(this::ativar);
+	}
+
+	@Transactional
+	public void inativar(List<Long> restauranteId) {
+		restauranteId.forEach(this::inativar);
+	}
+
+	@Transactional
 	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId) {
 		Restaurante restaurante = buscar(restauranteId);
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
@@ -106,4 +123,21 @@ public class CadastroRestauranteService {
 
 		restauranteAtual.fechar();
 	}
+
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscar(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+		restaurante.removerResponsavel(usuario);
+	}
+
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId) {
+		Restaurante restaurante = buscar(restauranteId);
+		Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+		restaurante.adicionarResponsavel(usuario);
+	}
+
 }

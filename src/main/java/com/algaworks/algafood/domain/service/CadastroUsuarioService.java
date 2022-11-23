@@ -14,6 +14,7 @@ import com.algaworks.algafood.domain.Exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.Exception.GrupoNaoEncontradoException;
 import com.algaworks.algafood.domain.Exception.NegocioException;
 import com.algaworks.algafood.domain.Exception.UsuarioNaoEncontradoException;
+import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 
@@ -24,13 +25,16 @@ public class CadastroUsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	private EntityManager manager;
 
+	@Autowired
+	private CadastroGrupoService cadastroGrupo;
+
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
-		
+
 		manager.detach(usuario);
 
 		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
@@ -71,6 +75,23 @@ public class CadastroUsuarioService {
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(MSG_USUARIO_EM_USO, usuarioId));
 		}
+
+	}
+
+	@Transactional
+	public void desassociarGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuario = buscarOuFalhar(usuarioId);
+		Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+		usuario.removerGrupo(grupo);
+	}
+
+	@Transactional
+	public void associarGrupo(Long usuarioId, Long grupoId) {
+		Usuario usuario = buscarOuFalhar(usuarioId);
+		Grupo grupo = cadastroGrupo.buscarOuFalhar(grupoId);
+
+		usuario.adicionarGrupo(grupo);
 	}
 
 }
