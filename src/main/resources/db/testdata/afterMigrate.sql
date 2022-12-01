@@ -14,6 +14,8 @@ delete from usuario;
 delete from usuario_grupo;
 delete from restaurante_usuario_responsavel;
 
+
+
 set foreign_key_checks = 1;
 
 alter table cidade auto_increment = 1;
